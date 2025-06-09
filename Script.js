@@ -6,7 +6,6 @@ let justcalculated =false;
 
 function appendTodisplay(value) {
     console.log('button pressed:',value);
-    alert('You pressed:'+value);
     
     let currentValue=display.value;
 
@@ -15,18 +14,22 @@ function appendTodisplay(value) {
     justcalculated=false;
     return;
     }
+
     //If current display show 0 and user enters a number,we wanna replace the 0
     if(current==="0"&& !isNaN(value)){
        display.value= value; 
-    } 
-
-    //If the current display shows 0 and the user enters a decimal ,keep the 0
-    else if(currentValue==='0' && value==='.'){
-        display.value=currentvalue + value
-     }
-     else{
-        display.value=currentValue + value;
-     }
+    } else  if(currentValue==='0 && value === '.'){
+        display.value=currentValue+value;
+    }else if(value ==='.'){
+        //Get the last number in the display
+        let lastNymber =currentValue.split('/[+\-*/]').pop();
+        //only add the decimal if the current number doesnt have ont
+        if(!lastNumber.includes('.')){
+            display.value =currentValue + value 
+        }
+    }else{
+        display.value = currentValue + value;
+    }
 
      //Reset the justCalculated flag when user starts typing
      justcalculated=false;
@@ -35,11 +38,21 @@ function appendTodisplay(value) {
    
 }
 function clearDisplay() {
-    console.log('Clear button pressed.')
-    alert(Clear button was clicked);
+    console.log('Clear button pressed.');
+    
+    alert('Clear button was clicked');
+    
+    display.value='0';
+    justCalculated=false;
+    
+    display.style.backgroundColor='#f0f0f0';
+    setTimeout(() =>{
+        display.style.backgroundColor='';
+    }, 150); 
 }
 function deletelasat() {
-    console.log('Backspace  button pressed.')
+    console.log('Backspace  button pressed.');
+
     let currentValue= display.value
 
     //If theres only one characteror its 0,reset to 0
@@ -49,18 +62,42 @@ function deletelasat() {
         display.value=currentValue.slice(0,-1);
     }
 
-    alert(Backspace button was clicked);
 }
-function CALCULATE() {
-function clearDisplay() {
-    console.log('Equals button pressed.')
-    alert(Equals button was clicked);
+function calculate() {
+    console.log('Equals button pressed.');
+
+    alert('Equal button was clicked');
 }
+
+document.addEventListener('keydown' ,function(Event)){
+    console.log('key pressed',Event.key);
+
+    if (Event.key >= '0 && Event,key<='9'){
+        appendTodisplay(Event.key)
+    }else if (Event.key==='.'){
+        appendTodisplay('.');
+    }else if(Event.key==='+'){
+        appendTodisplay('+');
+    }else if(Event.key==='-'){
+        appendTodisplay('-');
+    }else if(Event.key ===='*'){
+        appendTodisplay('*');
+    }else if (Event.key==='/'){
+        Event.preventDefault();
+        appendTodisplay('/');
+    }
+    else if(Event.key==='Enter'|| Event.key==='='){
+         CALCULATE();
+    }else if(Event.key==='Escape' ||Event.key==='c' || Event.key ==='C'){
+        clearDisplay();
+    }else if(Event.key ==='Backspace'){
+        deletelast();
+    }
+})
 
 document.addEventListener('DOMContentLoaded',function(){
     console.log('calculator loaded successfully');
-    
-    console.log('Display elemt',display);
+     console.log('Display element',display);
 
     if (diplay){
       console.log('current display value:'display.value);
