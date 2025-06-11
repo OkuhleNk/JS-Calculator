@@ -4,6 +4,14 @@ const  display=document.getElementById('display');
 //Track if we  have performed a calculation
 let justcalculated =false;
 
+function isOperator(char) {
+    return['+','=','*','/'].includes(char);
+}
+
+function getLastChar() {
+    return display.value.slice(-1);
+}
+
 function appendTodisplay(value) {
     console.log('button pressed:',value);
     
@@ -15,17 +23,43 @@ function appendTodisplay(value) {
     return;
     }
 
-    //If current display show 0 and user enters a number,we wanna replace the 0
-    if(current==="0"&& !isNaN(value)){
-       display.value= value; 
-    } else  if(currentValue==='0 && value === '.'){
-        display.value=currentValue+value;
-    }else if(value ==='.'){
-        //Get the last number in the display
-        let lastNymber =currentValue.split('/[+\-*/]').pop();
-        //only add the decimal if the current number doesnt have ont
-        if(!lastNumber.includes('.')){
-            display.value =currentValue + value 
+    if (justCalculated && isOperator(value)) {
+        display.value =currentValue + value ;
+    justCalculated =false;
+    return;
+    }
+
+    //Handles operators
+    if(operator(value)){
+        //dont allow operator as first char exception for minus)
+        if(currentValue=== '0' && value !=='-'){
+            return; //Do nothing  
+        }
+
+        //If the last character is already an operator,replace it
+        if(isOperator(getLastChar())){
+            display.value = currentValue.slice(0, -1) + value
+        }else{
+            display.value = currentValue + value;
+        } 
+    }else if(!isNaN(value)){
+       if(currentValue ==='0'){
+        display.value = value;
+       }else{
+        display.value = currentValue + value;
+    }
+     } else  if(value === '.'){
+        if(currentValue==='0'){
+            display.value = currentValue + value;
+        }else{ +value
+            // Get the last number in the display (after last operator)
+            let parts = currentValue.split('/[+\-*');
+            let lastNumber = parts[parts.length -1];
+
+            //only add a decimal if number doesnt already one
+            if(!lastNumber.includes('.')){
+                display.value = currentValue + value;
+            }
         }
     }else{
         display.value = currentValue + value;
@@ -69,28 +103,29 @@ function calculate() {
     alert('Equal button was clicked');
 }
 
-document.addEventListener('keydown' ,function(Event)){
-    console.log('key pressed',Event.key);
+document.addEventListener('keydown' ,function(event)){
+    console.log('key pressed',event.key);
 
-    if (Event.key >= '0 && Event,key<='9'){
-        appendTodisplay(Event.key)
-    }else if (Event.key==='.'){
+    if (Event.key >= '0 && event,key<='9'){
+        appendTodisplay(event.key)
+    }else if (event.key==='.'){
         appendTodisplay('.');
-    }else if(Event.key==='+'){
+    }else if(event.key==='+'){
         appendTodisplay('+');
-    }else if(Event.key==='-'){
+    }else if(event.key==='-'){
         appendTodisplay('-');
-    }else if(Event.key ===='*'){
+    }else if(event.key ===='*'){
         appendTodisplay('*');
-    }else if (Event.key==='/'){
-        Event.preventDefault();
+    }else if (event.key==='/'){
+        event.preventDefault();
+
         appendTodisplay('/');
     }
-    else if(Event.key==='Enter'|| Event.key==='='){
+    else if(event.key==='Enter'|| event.key==='='){
          CALCULATE();
-    }else if(Event.key==='Escape' ||Event.key==='c' || Event.key ==='C'){
+    }else if(event.key==='Escape' ||event.key==='c' || event.key ==='C'){
         clearDisplay();
-    }else if(Event.key ==='Backspace'){
+    }else if(event.key ==='Backspace'){
         deletelast();
     }
 })
