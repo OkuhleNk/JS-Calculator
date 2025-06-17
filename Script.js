@@ -12,6 +12,30 @@ function getLastChar() {
     return display.value.slice(-1);
 }
 
+function safeEva(expression) {
+    try{
+       let jsExpression =expression
+          .replace(/x/g, '*')
+            .replace(/:-/g,'/');
+
+            if(!/^[0-9+\*/.()]+$/.test(jsExpression)){
+                throw new Error('invalid character in expression');
+            }
+
+            const result = function ('"use strict"; return('+ jsExpression +')')();
+
+            if(!isFinite(result{
+                throw new Error('Invalid calculation result');
+            }
+    catch (error){
+        console.error('Calculation error:' + error);
+        return 'Error';
+
+      }
+    }
+    
+}
+
 function appendTodisplay(value) {
     console.log('button pressed:',value);
     
